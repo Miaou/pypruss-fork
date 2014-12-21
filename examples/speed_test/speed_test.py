@@ -1,8 +1,8 @@
 import pypruss
 import os
 
-print "This example toggles pin P8.12 as fast as it can, 5ns pr cycle."
-print "It muxes the pin to mode 6 and does not stop, so use Ctrl-c to end the script."
+print("This example toggles pin P8.12 as fast as it can, 5ns pr cycle.")
+print("It muxes the pin to mode 6 and does not stop, so use Ctrl-c to end the script.")
 
 os.system("echo 6 > /sys/kernel/debug/omap_mux/gpmc_ad12")
 

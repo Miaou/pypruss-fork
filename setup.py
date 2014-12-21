@@ -3,18 +3,18 @@
 # Note that there is a hack here for removing the default sysroot directive
 # that is standard for python installers. 
  
-print "Installing PyPRUSS"
+print("Installing PyPRUSS")
 
 try:
     from distutils.core import setup, Extension
     from distutils import sysconfig
     import re
     
-    print "Removing --sysroot directive from Link command"
+    print("Removing --sysroot directive from Link command")
     vars  = sysconfig.get_config_vars()
     vars['LDSHARED'] =  re.sub("--sysroot=.* ", " ", vars['LDSHARED'])
 
-    print "Running setup"
+    print("Running setup")
 
     setup(name='PyPRUSS',
         version='0.1',
@@ -33,7 +33,7 @@ try:
                             extra_link_args=["-shared"]
                     )],
         )
-    print "Finished installing, Great!"
-except Exception, e:
-    print "Install failed with exception:\n%s" % e
+    print("Finished installing, Great!")
+except Exception as e:
+    print(("Install failed with exception:\n%s" % e))
 

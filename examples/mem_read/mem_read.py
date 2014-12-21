@@ -39,8 +39,8 @@ pypruss.exit()								# Exit
 with open("/dev/mem", "r+b") as f:	       
     ddr_mem = mmap.mmap(f.fileno(), PRU_ICSS_LEN, offset=PRU_ICSS) 
     local = struct.unpack('L', ddr_mem[RAM0_START:RAM0_START+4])
-    print hex(local[0])
+    print(hex(local[0]))
     local = struct.unpack('L', ddr_mem[RAM1_START:RAM1_START+4])
-    print hex(local[0])
+    print(hex(local[0]))
     shared = struct.unpack('L', ddr_mem[RAM2_START:RAM2_START+4])
-    print hex(shared[0])
+    print(hex(shared[0]))

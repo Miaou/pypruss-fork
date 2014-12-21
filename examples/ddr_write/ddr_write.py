@@ -10,7 +10,7 @@ pypruss.modprobe()
 ddr_addr = pypruss.ddr_addr()
 ddr_size = pypruss.ddr_size()
 
-print "DDR memory address is 0x%x and the size is 0x%x"%(ddr_addr, ddr_size)
+print("DDR memory address is 0x%x and the size is 0x%x"%(ddr_addr, ddr_size))
 
 ddr_offset  = ddr_addr-0x10000000
 ddr_filelen = ddr_size+0x10000000
@@ -32,8 +32,8 @@ with open("/dev/mem", "r+b") as f:									# Open the physical memory device
 read_back = struct.unpack("L", ddr_mem[ddr_start:ddr_start+4])[0]	# Parse the data
 read_back2 = struct.unpack("L", ddr_mem[ddr_end-4:ddr_end])[0]	    # Parse the data
 
-print "The first 4 bytes of DDR memory reads "+hex(read_back)
-print "The last 4 bytes of DDR memory reads "+hex(read_back2)
+print("The first 4 bytes of DDR memory reads "+hex(read_back))
+print("The last 4 bytes of DDR memory reads "+hex(read_back2))
 
 ddr_mem.close()														# Close the memory 
 f.close()															# Close the file

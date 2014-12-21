@@ -7,6 +7,9 @@ Website: http://www.hipstercircuits.com
 License: BSD
 
 You can use and change this, but keep this heading :)
+
+Porting to Python3: PA Brameret
+With help from: http://python3porting.com/cextensions.html
 */
 
 #include <Python.h>
@@ -135,7 +138,7 @@ static PyObject *pypruss_pru_write_memory(PyObject *self, PyObject *args){
 
     for (i = 0; i < len; i++) {
         int_obj	= PySequence_Fast_GET_ITEM(data_seq, i);
-		data[i] = PyInt_AsUnsignedLongMask(int_obj);		
+		data[i] = PyLong_AsUnsignedLongMask(int_obj);		
     }
     Py_DECREF(data_seq);
 
@@ -263,11 +266,23 @@ static PyMethodDef pypruss_methods[] = {
         { NULL, NULL, 0, NULL }
 };
  
-// Some sort of init stuff.         
-PyMODINIT_FUNC initpypruss(){
+// Some sort of init stuff.
+PyMODINIT_FUNC PyInit_pypruss(){
     PyObject *m;
-    m = Py_InitModule3("pypruss", pypruss_methods, "Extenstion lib for PRUSS");
+    static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "pypruss",           /* m_name */
+        "Extenstion lib for PRUSS",  /* m_doc */
+        -1,                  /* m_size */
+        pypruss_methods,     /* m_methods */
+        NULL,                /* m_reload */
+        NULL,                /* m_traverse */
+        NULL,                /* m_clear */
+        NULL,                /* m_free */
+    };
+    m = PyModule_Create(&moduledef);
     PyModule_AddIntMacro(m, PRUSS0_PRU0_DATARAM);
     PyModule_AddIntMacro(m, PRUSS0_PRU1_DATARAM);
+    return m;
 }
 
