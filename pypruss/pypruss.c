@@ -106,6 +106,7 @@ static PyObject *pypruss_map_prumem(PyObject *self, PyObject *args){
     int mem_type;       // PRUSS0_PRU0_DATARAM or PRUSS0_PRU1_DATARAM
     void *p;
     int rc;
+    Py_buffer buffer;
 
     if (!PyArg_ParseTuple(args, "i", &mem_type))
         return NULL;
@@ -113,9 +114,17 @@ static PyObject *pypruss_map_prumem(PyObject *self, PyObject *args){
     rc = prussdrv_map_prumem(mem_type, &p);
     if (rc)
         return NULL;
-
+    
     // FIXME: This is wrong for shared data areas and v1 devices
-    return PyBuffer_FromReadWriteMemory(p, 8*1024);
+    //return PyBuffer_FromReadWriteMemory(p, 8*1024);
+
+    // Thanks, http://stackoverflow.com/questions/23064407/expose-c-buffer-as-python-3-bytes
+    rc = PyBuffer_FillInfo(&buffer, 0, p, 8*1024, 1, PyBUF_CONTIG_RO);
+    if (rc == -1) {
+        PyErr_Print();
+        return NULL;
+    }
+    return PyMemoryView_FromBuffer(&buffer);
 }
 
 // Write data to the memory
