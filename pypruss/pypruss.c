@@ -177,9 +177,14 @@ static PyObject *pypruss_exec_program(PyObject *self, PyObject *args){
      	return NULL;
     }
 
-    prussdrv_exec_program (pru_num, filename);						// Load and execute the program 
-	
-	Py_INCREF(Py_None);
+    int ret=prussdrv_exec_program (pru_num, filename);  // Load and execute the program 
+    if(ret)
+    {
+        printf("Cannot load program \"%s\"\n", filename);
+        return NULL;
+    }
+    
+    Py_INCREF(Py_None);
     return Py_None;
 }
  
@@ -189,17 +194,18 @@ static PyObject *pypruss_wait_for_event(PyObject *self, PyObject *args){
 	int evtout; // PRU_EVTOUT_0 or PRU_EVTOUT_1
     if (!PyArg_ParseTuple(args, "i", &evtout))
      	return NULL;	
-	prussdrv_pru_wait_event (evtout);			// Wait for the event. This blocks the thread. 
+	prussdrv_pru_wait_event (evtout);   // Wait for the event. This blocks the thread. 
     Py_INCREF(Py_None);
     return Py_None;
 }
 
 // Clear an event 
 static PyObject *pypruss_clear_event(PyObject *self, PyObject *args){
-	int event; // PRU0_ARM_INTERRUPT or PRU1_ARM_INTERRUPT
-    if (!PyArg_ParseTuple(args, "i", &event))
+    unsigned int event; // PRU0_ARM_INTERRUPT or PRU1_ARM_INTERRUPT
+    unsigned int host_interrupt;
+    if (!PyArg_ParseTuple(args, "ii", &host_interrupt, &event))
      	return NULL;
-	prussdrv_pru_clear_event (event); 	// Clear the event 
+    prussdrv_pru_clear_event (host_interrupt, event); 	// Clear the event 
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -292,6 +298,9 @@ PyMODINIT_FUNC PyInit_pypruss(){
     m = PyModule_Create(&moduledef);
     PyModule_AddIntMacro(m, PRUSS0_PRU0_DATARAM);
     PyModule_AddIntMacro(m, PRUSS0_PRU1_DATARAM);
+    PyModule_AddIntMacro(m, PRUSS0_SHARED_DATARAM);
+    PyModule_AddIntMacro(m, PRU0_ARM_INTERRUPT);
+    PyModule_AddIntMacro(m, PRU_EVTOUT_0);
     return m;
 }
 

@@ -1,10 +1,13 @@
 
-CFLAGS=-Wall -Iinclude -I/usr/include/python3.2 -D__DEBUG -O2 -mtune=cortex-a8 -march=armv7-a -shared -fPIC
+PATH_PRU_SW=../../am335x_pru_package/pru_sw/
+PATH_PRU_LOADER=$(PATH_PRU_SW)app_loader/
+
+CFLAGS=-Wall -I$(PATH_PRU_LOADER)include -I/usr/include/python3.2 -shared -fPIC
 LDFLAGS=-Llib -lprussdrv -lpthread -fPIC
 OBJ=pypruss.o
-TARGET=pypruss.so
+TARGET=../../pypruss.so
 
-.PHONY: clean all install
+.PHONY: clean all
 
 all: $(TARGET)
 
@@ -18,7 +21,5 @@ $(TARGET): $(OBJ)
 clean: 
 	rm -rf $(OBJ) *~ $(TARGET)
 
-install: 
-	cp $(TARGET) /usr/lib/python3.2/site-packages/
 
 
